@@ -43,6 +43,7 @@ class Queue {
         }
         System.out.println("\nElement deleted: " + front.data);
         front = front.next;
+        if(front==null) rear=null;
     }
 
     void display() {
