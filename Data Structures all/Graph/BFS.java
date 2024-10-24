@@ -65,7 +65,7 @@ class BFS {
 
 
 
-import java.util.LinkedList;
+/*import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -168,6 +168,133 @@ public class BFSGraph {
         }
 
         // Display the adjacency matrix
+        graph.printGraph();
+
+        // Input for start and end node
+        System.out.print("Enter start node: ");
+        int startNode = scanner.nextInt();
+
+        System.out.print("Enter end node: ");
+        int endNode = scanner.nextInt();
+
+        // Perform BFS and print the path
+        graph.bfs(startNode, endNode);
+
+        scanner.close();
+    }
+}*/
+
+
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+public class BFSGraphAdjList {
+    private int vertices;
+    private ArrayList<ArrayList<Integer>> adjList;
+
+    // Constructor to initialize the graph
+    public BFSGraphAdjList(int vertices) {
+        this.vertices = vertices;
+        adjList = new ArrayList<>(vertices + 1);
+
+        // Initialize adjacency list
+        for (int i = 0; i <= vertices; i++) {
+            adjList.add(new ArrayList<>());
+        }
+    }
+
+    // Function to add edges to the graph (Adjacency List)
+    public void addEdge(int src, int dest) {
+        adjList.get(src).add(dest);
+        adjList.get(dest).add(src); // Since it's an undirected graph
+    }
+
+    // Function to display the adjacency list (with vertex labels)
+    public void printGraph() {
+        System.out.println("Adjacency List Representation of the Graph:");
+        for (int i = 1; i <= vertices; i++) {
+            System.out.print(i + " -> ");
+            for (int neighbor : adjList.get(i)) {
+                System.out.print(neighbor + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    // BFS implementation using a queue
+    public void bfs(int startNode, int endNode) {
+        boolean[] visited = new boolean[vertices + 1]; // Tracks visited nodes
+        int[] parent = new int[vertices + 1]; // Stores parent of each node to reconstruct path
+        
+        // Initialize parent array with -1
+        for (int i = 1; i <= vertices; i++) {
+            parent[i] = -1;
+        }
+
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(startNode);
+        
+        while (!queue.isEmpty()) {
+            int currentNode = queue.poll();
+            
+            if (visited[currentNode]) {
+                continue;
+            }
+            
+            visited[currentNode] = true;
+
+            // Visit all the neighbors of the current node
+            for (int neighbor : adjList.get(currentNode)) {
+                if (!visited[neighbor]) {
+                    if (parent[neighbor] == -1) {
+                        parent[neighbor] = currentNode;
+                    }
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        // Print visited nodes
+        System.out.print("Visited nodes: ");
+        for (int i = 1; i <= vertices; i++) {
+            System.out.print((visited[i] ? 1 : 0) + " ");
+        }
+        System.out.println();
+
+        // Reconstruct path from startNode to endNode
+        System.out.print("Path from " + startNode + " to " + endNode + ": ");
+        while (endNode != startNode) {
+            System.out.print(endNode + " <- ");
+            endNode = parent[endNode];
+        }
+        System.out.println(startNode);
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input for the number of vertices
+        System.out.print("Enter the number of vertices: ");
+        int vertices = scanner.nextInt();
+
+        BFSGraphAdjList graph = new BFSGraphAdjList(vertices);
+
+        // Input for the number of edges
+        System.out.print("Enter the number of edges: ");
+        int edges = scanner.nextInt();
+
+        // Input edges (source, destination)
+        System.out.println("Enter the edges (source destination):");
+        for (int i = 0; i < edges; i++) {
+            int src = scanner.nextInt();
+            int dest = scanner.nextInt();
+            graph.addEdge(src, dest);
+        }
+
+        // Display the adjacency list
         graph.printGraph();
 
         // Input for start and end node
